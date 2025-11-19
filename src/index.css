@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+	/* Base color variables (light theme) */
 	--bg: #f8fafc; /* slate-50 */
 	--text: #0f172a; /* slate-900 */
 	--muted: #64748b; /* slate-500 */
@@ -16,54 +17,39 @@
 	--accent: #818cf8;
 }
 
+/* Apply base colors */
 body {
-		background-color: var(--bg);
-		color: var(--text);
+	background-color: var(--bg);
+	color: var(--text);
 }
 
-/* Override some Tailwind utility classes in dark mode to respect variables */
+/* Ensure some Tailwind utilities map to our variables in dark mode */
 [data-theme="dark"] .bg-white {
-		background-color: var(--card) !important;
+	background-color: var(--card) !important;
 }
 [data-theme="dark"] .text-slate-700,
 [data-theme="dark"] .text-slate-500 {
-		color: var(--text) !important;
+	color: var(--text) !important;
 }
 [data-theme="dark"] .border-slate-500 {
-		border-color: rgba(148,163,184,0.12) !important;
+	border-color: rgba(148,163,184,0.12) !important;
 }
 
-/* Accent button using CSS variable */
+/* Accent / buttons: keep strong contrast */
 .btn-accent {
-		background-color: var(--accent);
-		color: white;
+	background-color: var(--accent);
+	color: #ffffff; /* explicit white for contrast */
 }
 .btn-accent:hover { filter: brightness(0.95); }
 
-/* Background class for stormdog image with subtle overlay for readability */
-.stormdog-bg {
-	background-image: url('/img/stormdog.jpg');
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-attachment: fixed;
+/* Ensure light bg-100 style buttons keep readable text on both themes */
+.bg-slate-100, .bg-gray-100, .bg-green-100, .bg-red-100 {
+	color: inherit; /* let text utility control color */
 }
 
-/* Subtle dark overlay so foreground text remains readable on top of the image */
-body.stormdog-bg::before {
-	content: '';
-	position: fixed;
-	inset: 0;
-	background: rgba(0,0,0,0.28);
-	pointer-events: none;
-	z-index: 0;
-}
-
-/* Ensure app container sits above the overlay */
-.mx-4.mt-10.max-w-2xl.md\:mx-auto {
-	position: relative;
-	z-index: 1;
-}
+/* If a utility uses text-slate-700 in light theme, keep it readable */
+.text-slate-700 { color: #0f172a; }
+.text-slate-500 { color: #64748b; }
 
 /* Background class for stormdog image with subtle overlay for readability */
 .stormdog-bg {

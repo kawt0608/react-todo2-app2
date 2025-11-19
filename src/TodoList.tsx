@@ -53,8 +53,8 @@ const TodoList = (props: Props) => {
               <FontAwesomeIcon icon={faFaceGrinWide} className="ml-1.5" />
             </div>
           )}
-          <div className="flex flex-row items-baseline text-slate-700">
-            <div className="flex items-center">
+          <div className="flex flex-col sm:flex-row sm:items-baseline text-slate-700 gap-2 sm:gap-0">
+            <div className="flex items-center flex-wrap gap-2">
               <input
                 type="checkbox"
                 checked={todo.isDone}
@@ -67,7 +67,7 @@ const TodoList = (props: Props) => {
                   value={draft.name}
                   onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
                   className={twMerge(
-                    "text-lg font-bold rounded-md border p-1",
+                    "text-lg font-bold rounded-md border p-1 w-full sm:w-auto",
                     todo.isDone && "line-through decoration-2"
                   )}
                 />
@@ -91,7 +91,7 @@ const TodoList = (props: Props) => {
                   <select
                     value={draft.priority}
                     onChange={(e) => setDraft((d) => ({ ...d, priority: Number(e.target.value) }))}
-                    className="rounded-md border px-1 py-0.5"
+                    className="rounded-md border px-1 py-0.5 w-full sm:w-auto"
                   >
                     {[1, 2, 3].map((v) => (
                       <option key={v} value={v}>{`${v} (${num2star(v)})`}</option>
@@ -103,7 +103,7 @@ const TodoList = (props: Props) => {
               </div>
             </div>
 
-            <div className="ml-4 flex items-center space-x-2">
+            <div className="ml-0 sm:ml-4 mt-2 sm:mt-0 flex flex-wrap items-center space-x-2">
               {editingId === todo.id ? (
                 <>
                   <button
@@ -156,7 +156,7 @@ const TodoList = (props: Props) => {
               )}
             </div>
           </div>
-          <div className="ml-4 flex items-center text-sm text-slate-500">
+          <div className="ml-0 sm:ml-4 mt-1 sm:mt-0 flex items-center text-sm text-slate-500">
             <FontAwesomeIcon
               icon={faClock}
               flip="horizontal"
@@ -167,7 +167,7 @@ const TodoList = (props: Props) => {
                 type="datetime-local"
                 value={draft.deadline}
                 onChange={(e) => setDraft((d) => ({ ...d, deadline: e.target.value }))}
-                className="rounded-md border border-gray-400 px-2 py-0.5"
+                className="rounded-md border border-gray-400 px-2 py-0.5 w-full sm:w-auto"
               />
             ) : (
               todo.deadline && (

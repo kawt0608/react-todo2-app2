@@ -259,9 +259,9 @@ const App = () => {
 
   return (
     <div className="mx-4 mt-10 max-w-2xl md:mx-auto">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">TodoApp</h1>
-        <div className="flex items-center">
+        <div className="flex flex-wrap items-center gap-2">
           <a
             href="https://www.youtube.com/"
             target="_blank"
@@ -299,7 +299,7 @@ const App = () => {
       </div>
   <TodoList todos={sortedTodos} onToggleIsDone={updateIsDone} onDeleteTodo={removeTodo} onUpdateTodo={updateTodo} />
 
-  <div className="mt-5 flex items-center justify-between">
+  <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
     <button
       type="button"
       onClick={removeCompletedTodos}
@@ -310,7 +310,7 @@ const App = () => {
       完了済みのタスクを削除
     </button>
 
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-wrap items-center space-x-2">
       <button
         type="button"
         onClick={() => setSortMode("priority")}
@@ -369,7 +369,7 @@ const App = () => {
         </div>
         {/* ...ここまで */}
 
-        <div className="flex gap-5">
+        <div className="flex flex-wrap gap-5 items-center">
           <div className="font-bold">優先度</div>
           {[1, 2, 3].map((value) => (
             <label key={value} className="flex items-center space-x-1">
