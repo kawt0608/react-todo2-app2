@@ -17,28 +17,53 @@
 }
 
 body {
-	background-color: var(--bg);
-	color: var(--text);
+		background-color: var(--bg);
+		color: var(--text);
 }
 
 /* Override some Tailwind utility classes in dark mode to respect variables */
 [data-theme="dark"] .bg-white {
-	background-color: var(--card) !important;
+		background-color: var(--card) !important;
 }
 [data-theme="dark"] .text-slate-700,
 [data-theme="dark"] .text-slate-500 {
-	color: var(--text) !important;
+		color: var(--text) !important;
 }
 [data-theme="dark"] .border-slate-500 {
-	border-color: rgba(148,163,184,0.12) !important;
+		border-color: rgba(148,163,184,0.12) !important;
 }
 
 /* Accent button using CSS variable */
 .btn-accent {
-	background-color: var(--accent);
-	color: white;
+		background-color: var(--accent);
+		color: white;
 }
 .btn-accent:hover { filter: brightness(0.95); }
+
+/* Background class for stormdog image with subtle overlay for readability */
+.stormdog-bg {
+	background-image: url('/img/stormdog.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-attachment: fixed;
+}
+
+/* Subtle dark overlay so foreground text remains readable on top of the image */
+body.stormdog-bg::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,0.28);
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Ensure app container sits above the overlay */
+.mx-4.mt-10.max-w-2xl.md\:mx-auto {
+	position: relative;
+	z-index: 1;
+}
 
 /* Background class for stormdog image with subtle overlay for readability */
 .stormdog-bg {

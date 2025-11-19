@@ -13,12 +13,20 @@ type Props = {
   todos: Todo[];
   onToggleIsDone: (id: string, value: boolean) => void;
   onDeleteTodo: (id: string) => void;
+  onUpdateTodo?: (id: string, patch: Partial<Todo>) => void;
+  onSelectTodo?: (id: string) => void;
 };
 
 const num2star = (n: number): string => "★".repeat(4 - n);
 
 const TodoList = (props: Props) => {
-  const { todos, onToggleIsDone, onDeleteTodo } = props;
+  const { todos, onToggleIsDone, onDeleteTodo, onSelectTodo, onUpdateTodo } = props;
+  const [editingId, setEditingId] = React.useState<string | null>(null);
+  const [draft, setDraft] = React.useState<{ name: string; priority: number; deadline: string }>({
+    name: "",
+    priority: 3,
+    deadline: "",
+  });
 
   if (todos.length === 0) {
     return (
@@ -54,40 +62,121 @@ const TodoList = (props: Props) => {
                 onChange={(e) => onToggleIsDone(todo.id, e.currentTarget.checked)}
               />
               <FontAwesomeIcon icon={faFile} flip="horizontal" className="mr-1" />
-              <div
-                className={twMerge(
-                  "text-lg font-bold",
-                  todo.isDone && "line-through decoration-2"
-                )}
-              >
-                {todo.name}
-              </div>
+              {editingId === todo.id ? (
+                <input
+                  value={draft.name}
+                  onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+                  className={twMerge(
+                    "text-lg font-bold rounded-md border p-1",
+                    todo.isDone && "line-through decoration-2"
+                  )}
+                />
+              ) : (
+                <div
+                  className={twMerge(
+                    "text-lg font-bold cursor-pointer",
+                    todo.isDone && "line-through decoration-2"
+                  )}
+                  onClick={() => {
+                    if (typeof onSelectTodo === "function") onSelectTodo(todo.id);
+                  }}
+                  title="クリックでポモドーロを開始"
+                >
+                  {todo.name}
+                </div>
+              )}
               <div className="ml-2">優先度 </div>
               <div className="ml-2 text-orange-400">
-                {num2star(todo.priority)}
+                {editingId === todo.id ? (
+                  <select
+                    value={draft.priority}
+                    onChange={(e) => setDraft((d) => ({ ...d, priority: Number(e.target.value) }))}
+                    className="rounded-md border px-1 py-0.5"
+                  >
+                    {[1, 2, 3].map((v) => (
+                      <option key={v} value={v}>{`${v} (${num2star(v)})`}</option>
+                    ))}
+                  </select>
+                ) : (
+                  num2star(todo.priority)
+                )}
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => onDeleteTodo(todo.id)}
-              className="ml-4 rounded bg-red-100 px-2 py-1 text-sm font-bold text-red-600 hover:bg-red-200"
-            >
-              削除
-            </button>
-          </div>
-          {todo.deadline && (
-            <div className="ml-4 flex items-center text-sm text-slate-500">
-              <FontAwesomeIcon
-                icon={faClock}
-                flip="horizontal"
-                className="mr-1.5"
-              />
-              <div className={twMerge(todo.isDone && "line-through")}>
-                期限: {dayjs(todo.deadline).format("YYYY年M月D日 H時m分")}
-              </div>
+            <div className="ml-4 flex items-center space-x-2">
+              {editingId === todo.id ? (
+                <>
+                  <button
+                    className="rounded bg-green-100 px-2 py-1 text-sm font-bold text-green-700 hover:bg-green-200"
+                    onClick={() => {
+                      if (typeof onUpdateTodo === "function") {
+                        const patch: Partial<Todo> = {
+                          name: draft.name,
+                          priority: draft.priority,
+                          deadline: draft.deadline ? new Date(draft.deadline) : null,
+                        };
+                        onUpdateTodo(todo.id, patch);
+                      }
+                      setEditingId(null);
+                    }}
+                  >
+                    保存
+                  </button>
+                  <button
+                    className="rounded bg-gray-100 px-2 py-1 text-sm font-bold text-gray-700 hover:bg-gray-200"
+                    onClick={() => setEditingId(null)}
+                  >
+                    キャンセル
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingId(todo.id);
+                      setDraft({
+                        name: todo.name,
+                        priority: todo.priority,
+                        deadline: todo.deadline ? new Date(todo.deadline).toISOString().slice(0,19) : "",
+                      });
+                    }}
+                    className="rounded bg-slate-100 px-2 py-1 text-sm font-bold text-slate-700 hover:bg-slate-200"
+                  >
+                    編集
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDeleteTodo(todo.id)}
+                    className="rounded bg-red-100 px-2 py-1 text-sm font-bold text-red-600 hover:bg-red-200"
+                  >
+                    削除
+                  </button>
+                </>
+              )}
             </div>
-          )}
+          </div>
+          <div className="ml-4 flex items-center text-sm text-slate-500">
+            <FontAwesomeIcon
+              icon={faClock}
+              flip="horizontal"
+              className="mr-1.5"
+            />
+            {editingId === todo.id ? (
+              <input
+                type="datetime-local"
+                value={draft.deadline}
+                onChange={(e) => setDraft((d) => ({ ...d, deadline: e.target.value }))}
+                className="rounded-md border border-gray-400 px-2 py-0.5"
+              />
+            ) : (
+              todo.deadline && (
+                <div className={twMerge(todo.isDone && "line-through")}>
+                  期限: {dayjs(todo.deadline).format("YYYY年M月D日 H時m分")}
+                </div>
+              )
+            )}
+          </div>
         </div>
       ))}
     </div>

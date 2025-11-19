@@ -29,6 +29,9 @@ const App = () => {
     }
   });
 
+  // ソートモード: 'priority' = 優先度優先、'deadline' = 期日優先
+  const [sortMode, setSortMode] = useState<"priority" | "deadline">("priority");
+
   const uncompletedCount = todos.filter((todo: Todo) => !todo.isDone).length;
 
   useEffect(() => {
@@ -111,13 +114,21 @@ const App = () => {
 
   
 
-  // sort: primary = isDone (未完了(false) を先に), secondary = priority (小さい値が高優先度)、 tertiary = deadline (早い順)
+  // sort: primary = isDone (未完了(false) を先に)
+  // ソートモードに応じて secondary/tertiary を切り替える
   const sortedTodos = [...todos].sort((a, b) => {
     if (a.isDone !== b.isDone) return a.isDone ? 1 : -1;
-    if (a.priority !== b.priority) return a.priority - b.priority;
-    const at = a.deadline ? a.deadline.getTime() : Infinity;
-    const bt = b.deadline ? b.deadline.getTime() : Infinity;
-    return at - bt;
+    if (sortMode === "priority") {
+      if (a.priority !== b.priority) return a.priority - b.priority;
+      const at = a.deadline ? a.deadline.getTime() : Infinity;
+      const bt = b.deadline ? b.deadline.getTime() : Infinity;
+      return at - bt;
+    } else {
+      const at = a.deadline ? a.deadline.getTime() : Infinity;
+      const bt = b.deadline ? b.deadline.getTime() : Infinity;
+      if (at !== bt) return at - bt;
+      return a.priority - b.priority;
+    }
   });
 
   const removeCompletedTodos = () => {
@@ -191,6 +202,12 @@ const App = () => {
   setTodos(updatedTodos);
   };
 
+  // Update arbitrary fields of a todo (partial update)
+  const updateTodo = (id: string, patch: Partial<Todo>) => {
+    const updated = todos.map((t) => (t.id === id ? { ...t, ...patch } : t));
+    setTodos(updated);
+  };
+
   const handleSelectTodo = (id: string) => {
     // previously used for Pomodoro selection; removed
   };
@@ -261,6 +278,7 @@ const App = () => {
           >
             Netflix
           </a>
+          
           <button
             type="button"
             onClick={() => setDarkMode((v) => !v)}
@@ -279,16 +297,46 @@ const App = () => {
           uncompletedCount={uncompletedCount}
         />
       </div>
-  <TodoList todos={sortedTodos} onToggleIsDone={updateIsDone} onDeleteTodo={removeTodo} />
-<button
-  type="button"
-  onClick={removeCompletedTodos}
-  className={
-    "mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
-  }
->
-  完了済みのタスクを削除
-</button>
+  <TodoList todos={sortedTodos} onToggleIsDone={updateIsDone} onDeleteTodo={removeTodo} onUpdateTodo={updateTodo} />
+
+  <div className="mt-5 flex items-center justify-between">
+    <button
+      type="button"
+      onClick={removeCompletedTodos}
+      className={
+        "rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
+      }
+    >
+      完了済みのタスクを削除
+    </button>
+
+    <div className="flex items-center space-x-2">
+      <button
+        type="button"
+        onClick={() => setSortMode("priority")}
+        className={twMerge(
+          "rounded-md px-2 py-1 text-sm font-bold",
+          sortMode === "priority"
+            ? "bg-indigo-600 text-white"
+            : "bg-gray-200 text-slate-800 hover:bg-gray-300"
+        )}
+      >
+        優先度でソート
+      </button>
+      <button
+        type="button"
+        onClick={() => setSortMode("deadline")}
+        className={twMerge(
+          "rounded-md px-2 py-1 text-sm font-bold",
+          sortMode === "deadline"
+            ? "bg-indigo-600 text-white"
+            : "bg-gray-200 text-slate-800 hover:bg-gray-300"
+        )}
+      >
+        期限でソート
+      </button>
+    </div>
+  </div>
       <div className="mt-5 space-y-2 rounded-md border p-3">
         <h2 className="text-lg font-bold">新しいタスクの追加</h2>
         {/* 編集: ここから... */}

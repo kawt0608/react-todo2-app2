@@ -17,6 +17,25 @@ React、TypeScript、Tailwind CSS を使用し、ローカルストレージで�
 - 画面上部に外部リンク（YouTube、Netflix）。
 - 犬が隠れています。
 
+### ソート機能
+
+- ヘッダや一覧下部のコントロールで「優先度でソート」または「期限でソート」を選択できます。
+- デフォルトは「優先度でソート」です（未完了→優先度→期限）。
+- 「期限でソート」を選ぶと、未完了のタスク内で期日が早い順に並び替えられ、優先度は二次的に使われます。
+
+使い方:
+
+- 画面右下（または一覧の下部にある）ソートボタンで切り替えてください。クリックすると即座に並び順が変わります。
+
+### 編集機能
+
+- 各タスク行に「編集」ボタンがあります。編集をクリックするとその行が編集モードになり、以下が変更できます:
+	- タスク名（テキスト入力）
+	- 優先度（1〜3 のセレクト）
+	- 期限（日時入力）
+- 編集モードでは「保存」「キャンセル」ボタンが表示されます。保存すると変更が即座に反映され、`localStorage` にも保存されます。
+
+
 ## 技術スタック / 主要ライブラリ
 
 このアプリで使用している主な技術やライブラリは次の通りです。
@@ -53,6 +72,16 @@ React、TypeScript、Tailwind CSS を使用し、ローカルストレージで�
 <figure style="text-align:center; margin-top:1.6rem;">
   <img src="img/stormdog.jpg" alt="背景画像: stormdog" style="max-width:1200px;width:85%;height:auto;border:1px solid #ddd;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.15);" />
   <figcaption>サイトを更新したときに 30% の確率でページ背景にこの画像が適用されます</figcaption>
+</figure>
+
+<figure style="text-align:center; margin-top:1.2rem;">
+	<img src="img/sort.png" alt="ソートボタンの表示例" style="max-width:900px;width:75%;height:auto;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+	<figcaption>編集表示 — 各タスク行の「編集」ボタンによってその行がインライン編集モードになります。名前・優先度・期限を変更して「保存」で反映します。</figcaption>
+</figure>
+
+<figure style="text-align:center; margin-top:1.2rem;">
+	<img src="img/hensyuu.png" alt="編集モードの表示例" style="max-width:900px;width:75%;height:auto;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+	<figcaption>ソート表示 — 「完了済みのタスクを削除」ボタンの横にある「優先度でソート」「期限でソート」ボタン。クリックで並び順が即時に切り替わります。</figcaption>
 </figure>
 
 ## 挑戦・工夫・オリジナリティ
