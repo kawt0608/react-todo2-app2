@@ -84,6 +84,11 @@ React、TypeScript、Tailwind CSS を使用し、ローカルストレージで�
 	<figcaption>ソート表示 — 「完了済みのタスクを削除」ボタンの横にある「優先度でソート」「期限でソート」ボタン。クリックで並び順が即時に切り替わります。</figcaption>
 </figure>
 
+<figure style="text-align:center; margin-top:1.2rem;">
+	<img src="img/responsive.png" alt="スマホ版での表示" style="max-width:600px;width:50%;height:auto;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+	<figcaption>スマホ版での表示‐レスポンシブデザイン</figcaption>
+</figure>
+
 ## 挑戦・工夫・オリジナリティ
 
 - **ローカル永続化の堅牢化**: `localStorage` に保存した配列が空 (`"[]"`) の場合でも「保存済み」とみなすようにロード処理を調整しました。日付は ISO 文字列から `Date` に戻す処理を追加し、保存と復元の整合性を保っています。
